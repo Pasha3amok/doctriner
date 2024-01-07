@@ -20,7 +20,17 @@ const{
 
 const login = e => {
 	e.preventDefault();
-	console.log(values)
+	if (validate()) {
+		console.log(values);
+	}
+}
+
+const validate = ()=>{
+	let temp = {}
+	temp.email = (/\S+\.\S+/).test(values.email)?"":"Email is not valid."
+	temp.name = values.name!=""?"":"This field is required."
+	setErrors(temp)
+	return Object.values(temp).every(x=> x == "")
 }
 
   return (
@@ -44,13 +54,15 @@ const login = e => {
 						name="email"
 						value={values.email}
 						onChange={handleInputChange}
-						variant="outlined"/>
+						variant="outlined"
+						{...(errors.email && {error:true,helperText:errors.email})}/>
 						<TextField 
 						label="Name"
 						name="name"
 						value={values.name}
 						onChange={handleInputChange}
-						variant="outlined"/>
+						variant="outlined"
+						{...(errors.name && {error:true,helperText:errors.name})}/>
 						<Button
 						type="submit"
 						variant="contained"
