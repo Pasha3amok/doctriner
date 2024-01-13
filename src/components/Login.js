@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Box, Button, Card, CardContent, TextField, Typography } from '@mui/material'
 import Center from './Center'
 import useForm from '../hooks/useForm'
+import { ENDPOINTS, createAPIEndpoint } from '../api'
 
 const getFreshModel = () =>({
 	name:'',
@@ -21,16 +22,19 @@ const{
 const login = e => {
 	e.preventDefault();
 	if (validate()) {
-		console.log(values);
+		createAPIEndpoint(ENDPOINTS.user)
+		.post(values)
+		.then(response => console.log(response))
+		.catch(error => console.log(error));
 	}
 }
 
 const validate = ()=>{
 	let temp = {}
 	temp.email = (/\S+\.\S+/).test(values.email)?"":"Email is not valid."
-	temp.name = values.name!=""?"":"This field is required."
+	temp.name = values.name !== ""?"":"This field is required."
 	setErrors(temp)
-	return Object.values(temp).every(x=> x == "")
+	return Object.values(temp).every(x=> x === "")
 }
 
   return (
@@ -48,7 +52,7 @@ const validate = ()=>{
 						width:'90%'
 					}
 				}}>
-					<form noValidate onSubmit={login}>
+					<form noValidate autoComplete='off' onSubmit={login}>
 						<TextField 
 						label="Email"
 						name="email"
